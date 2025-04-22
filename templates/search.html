@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRI® Legal Agent - Suche</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding-top: 56px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+        footer {
+            margin-top: auto;
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+        .search-option {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-option:hover {
+            background-color: #f8f9fa;
+        }
+        .search-option.selected {
+            background-color: #e9ecef;
+            border-left: 3px solid #007bff;
+        }
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: static;
+                height: auto;
+                padding: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">IRI® Legal Agent</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/search"><i class="bi bi-search"></i> Suche</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profiles"><i class="bi bi-person"></i> Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/screenshots"><i class="bi bi-camera"></i> Screenshots</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs"><i class="bi bi-list-task"></i> Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/upload"><i class="bi bi-upload"></i> Upload</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <i class="bi bi-shield-check"></i> Rechtssichere Dokumentation
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar and Main Content -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="sidebar-sticky pt-3">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Hauptmenü</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">
+                                <i class="bi bi-house-door"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/search">
+                                <i class="bi bi-search"></i> Suche
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profiles">
+                                <i class="bi bi-person"></i> Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/screenshots">
+                                <i class="bi bi-camera"></i> Screenshots
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Verwaltung</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/jobs">
+                                <i class="bi bi-list-task"></i> Jobs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/upload">
+                                <i class="bi bi-upload"></i> Upload
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Suche</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="startSearch()">
+                            <i class="bi bi-search"></i> Suche starten
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Options -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-gear"></i> Suchoptionen
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <a href="#" class="list-group-item list-group-item-action search-option selected" data-option="full">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Vollständige Suche</h5>
+                                        </div>
+                                        <p class="mb-1">Durchsucht alle Plattformen mit allen Suchbegriffen</p>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action search-option" data-option="targeted">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Gezielte Suche</h5>
+                                        </div>
+                                        <p class="mb-1">Durchsucht ausgewählte Plattformen mit bestimmten Suchbegriffen</p>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action search-option" data-option="profile">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Profil-Suche</h5>
+                                        </div>
+                                        <p class="mb-1">Durchsucht bestimmte Profile auf verdächtige Inhalte</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <!-- Full Search Options -->
+                        <div id="fullSearchOptions" class="card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-search"></i> Vollständige Suche
+                            </div>
+                            <div class="card-body">
+                                <p>Bei der vollständigen Suche werden alle verfügbaren Plattformen mit allen Suchbegriffen durchsucht. Dies kann einige Zeit dauern.</p>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="fullSearchPlatforms" class="form-label">Plattformen</label>
+                                    <select id="fullSearchPlatforms" class="form-select" multiple>
+                                        {% for platform in platforms %}
+                                        <option value="{{ platform.name }}" selected>{{ platform.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="form-text">Wählen Sie die zu durchsuchenden Plattformen aus. Standardmäßig sind alle ausgewählt.</div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-primary" onclick="startFullSearch()">
+                                        <i class="bi bi-search"></i> Vollständige Suche starten
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Targeted Search Options -->
+                        <div id="targetedSearchOptions" class="card d-none">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-search"></i> Gezielte Suche
+                            </div>
+                            <div class="card-body">
+                                <p>Bei der gezielten Suche können Sie bestimmte Plattformen und Suchbegriffe auswählen.</p>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="targetedSearchPlatforms" class="form-label">Plattformen</label>
+                                    <select id="targetedSearchPlatforms" class="form-select" multiple>
+                                        {% for platform in platforms %}
+                                        <option value="{{ platform.name }}">{{ platform.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="form-text">Wählen Sie die zu durchsuchenden Plattformen aus.</div>
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="targetedSearchTerms" class="form-label">Suchbegriffe</label>
+                                    <select id="targetedSearchTerms" class="form-select" multiple>
+                                        <optgroup label="Hashtags">
+                                            {% for hashtag in hashtags %}
+                                            <option value="{{ hashtag }}">{{ hashtag }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                        <optgroup label="Keywords">
+                                            {% for keyword in keywords %}
+                                            <option value="{{ keyword }}">{{ keyword }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                        <optgroup label="Standorte">
+                                            {% for location in location_keywords %}
+                                            <option value="{{ location }}">{{ location }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                    <div class="form-text">Wählen Sie die zu verwendenden Suchbegriffe aus.</div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-primary" onclick="startTargetedSearch()">
+                                        <i class="bi bi-search"></i> Gezielte Suche starten
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Search Options -->
+                        <div id="profileSearchOptions" class="card d-none">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-search"></i> Profil-Suche
+                            </div>
+                            <div class="card-body">
+                                <p>Bei der Profil-Suche können Sie bestimmte Profile auf verdächtige Inhalte durchsuchen.</p>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="profileSearchUrls" class="form-label">Profil-URLs</label>
+                                    <textarea id="profileSearchUrls" class="form-control" rows="5" placeholder="https://instagram.com/example&#10;https://facebook.com/example&#10;https://tiktok.com/@example"></textarea>
+                                    <div class="form-text">Geben Sie die URLs der zu durchsuchenden Profile ein, eine pro Zeile.</div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-primary" onclick="startProfileSearch()">
+                                        <i class="bi bi-search"></i> Profil-Suche starten
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Terms Overview -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-list-ul"></i> Verfügbare Suchbegriffe
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="searchTermsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="hashtags-tab" data-bs-toggle="tab" data-bs-target="#hashtags" type="button" role="tab" aria-controls="hashtags" aria-selected="true">Hashtags</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="keywords-tab" data-bs-toggle="tab" data-bs-target="#keywords" type="button" role="tab" aria-controls="keywords" aria-selected="false">Keywords</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="locations-tab" data-bs-toggle="tab" data-bs-target="#locations" type="button" role="tab" aria-controls="locations" aria-selected="false">Standorte</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts" type="button" role="tab" aria-controls="accounts" aria-selected="false">Accounts</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content p-3" id="searchTermsTabContent">
+                            <div class="tab-pane fade show active" id="hashtags" role="tabpanel" aria-labelledby="hashtags-tab">
+                                <div class="row">
+                                    {% for hashtag in hashtags %}
+                                    <div class="col-md-3 mb-2">
+                                        <span class="badge bg-primary">{{ hashtag }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="keywords" role="tabpanel" aria-labelledby="keywords-tab">
+                                <div class="row">
+                                    {% for keyword in keywords %}
+                                    <div class="col-md-4 mb-2">
+                                        <span class="badge bg-secondary">{{ keyword }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="locations" role="tabpanel" aria-labelledby="locations-tab">
+                                <div class="row">
+                                    {% for location in location_keywords %}
+                                    <div class="col-md-3 mb-2">
+                                        <span class="badge bg-success">{{ location }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="accounts" role="tabpanel" aria-labelledby="accounts-tab">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h5>Instagram</h5>
+                                        <ul class="list-group">
+                                            {% for account in instagram_accounts %}
+                                            <li class="list-group-item">{{ account }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5>Facebook</h5>
+                                        <ul class="list-group">
+                                            {% for page in facebook_pages %}
+                                            <li class="list-group-item">{{ page }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5>TikTok</h5>
+                                        <ul class="list-group">
+                                            {% for account in tiktok_accounts %}
+                                            <li class="list-group-item">{{ account }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">IRI® Legal Agent</h5>
+                    <p>
+                        Ein Tool zur Erkennung und Dokumentation von nicht-lizenzierten kosmetischen Behandlungen in Deutschland.
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#!" class="text-dark">Dokumentation</a></li>
+                        <li><a href="#!" class="text-dark">Hilfe</a></li>
+                        <li><a href="#!" class="text-dark">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Rechtliches</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#!" class="text-dark">Datenschutz</a></li>
+                        <li><a href="#!" class="text-dark">Impressum</a></li>
+                        <li><a href="#!" class="text-dark">AGB</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2025 IRI® Legal Agent
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle search options
+        document.querySelectorAll('.search-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove selected class from all options
+                document.querySelectorAll('.search-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                
+                // Hide all search option cards
+                document.getElementById('fullSearchOptions').classList.add('d-none');
+                document.getElementById('targetedSearchOptions').classList.add('d-none');
+                document.getElementById('profileSearchOptions').classList.add('d-none');
+                
+                // Show selected search option card
+                const selectedOption = this.getAttribute('data-option');
+                document.getElementById(selectedOption + 'SearchOptions').classList.remove('d-none');
+            });
+        });
+
+        // Start search based on selected option
+        function startSearch() {
+            const selectedOption = document.querySelector('.search-option.selected').getAttribute('data-option');
+            
+            if (selectedOption === 'full') {
+                startFullSearch();
+            } else if (selectedOption === 'targeted') {
+                startTargetedSearch();
+            } else if (selectedOption === 'profile') {
+                startProfileSearch();
+            }
+        }
+
+        // Start full search
+        function startFullSearch() {
+            const platforms = Array.from(document.getElementById('fullSearchPlatforms').selectedOptions).map(option => option.value);
+            
+            if (platforms.length === 0) {
+                alert('Bitte wählen Sie mindestens eine Plattform aus.');
+                return;
+            }
+            
+            if (confirm('Möchten Sie eine vollständige Suche auf den ausgewählten Plattformen starten? Dies kann einige Zeit dauern.')) {
+                fetch('/api/run_scraping', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: 'full',
+                        platforms: platforms
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Vollständige Suche gestartet! Job-ID: ' + data.job_id);
+                        window.location.href = '/jobs';
+                    } else {
+                        alert('Fehler beim Starten der Suche: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Fehler beim Starten der Suche');
+                });
+            }
+        }
+
+        // Start targeted search
+        function startTargetedSearch() {
+            const platforms = Array.from(document.getElementById('targetedSearchPlatforms').selectedOptions).map(option => option.value);
+            const terms = Array.from(document.getElementById('targetedSearchTerms').selectedOptions).map(option => option.value);
+            
+            if (platforms.length === 0) {
+                alert('Bitte wählen Sie mindestens eine Plattform aus.');
+                return;
+            }
+            
+            if (terms.length === 0) {
+                alert('Bitte wählen Sie mindestens einen Suchbegriff aus.');
+                return;
+            }
+            
+            if (confirm('Möchten Sie eine gezielte Suche mit ' + terms.length + ' Suchbegriffen auf ' + platforms.length + ' Plattformen starten?')) {
+                fetch('/api/run_scraping', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: 'targeted',
+                        platforms: platforms,
+                        terms: terms
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Gezielte Suche gestartet! Job-ID: ' + data.job_id);
+                        window.location.href = '/jobs';
+                    } else {
+                        alert('Fehler beim Starten der Suche: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Fehler beim Starten der Suche');
+                });
+            }
+        }
+
+        // Start profile search
+        function startProfileSearch() {
+            const urlsText = document.getElementById('profileSearchUrls').value;
+            const urls = urlsText.split('\n').filter(url => url.trim() !== '');
+            
+            if (urls.length === 0) {
+                alert('Bitte geben Sie mindestens eine Profil-URL ein.');
+                return;
+            }
+            
+            if (confirm('Möchten Sie eine Profil-Suche für ' + urls.length + ' Profile starten?')) {
+                fetch('/api/run_scraping', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: 'profile',
+                        profiles: urls
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Profil-Suche gestartet! Job-ID: ' + data.job_id);
+                        window.location.href = '/jobs';
+                    } else {
+                        alert('Fehler beim Starten der Suche: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Fehler beim Starten der Suche');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

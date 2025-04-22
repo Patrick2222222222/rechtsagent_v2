@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRI® Legal Agent - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding-top: 56px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+        .card-dashboard {
+            transition: transform 0.3s;
+        }
+        .card-dashboard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .stats-card {
+            border-left: 4px solid #007bff;
+        }
+        .stats-card.warning {
+            border-left: 4px solid #ffc107;
+        }
+        .stats-card.danger {
+            border-left: 4px solid #dc3545;
+        }
+        .stats-card.success {
+            border-left: 4px solid #28a745;
+        }
+        .profile-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .risk-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        footer {
+            margin-top: auto;
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: static;
+                height: auto;
+                padding: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">IRI® Legal Agent</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/"><i class="bi bi-house-door"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search"><i class="bi bi-search"></i> Suche</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profiles"><i class="bi bi-person"></i> Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/screenshots"><i class="bi bi-camera"></i> Screenshots</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs"><i class="bi bi-list-task"></i> Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/upload"><i class="bi bi-upload"></i> Upload</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <i class="bi bi-shield-check"></i> Rechtssichere Dokumentation
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar and Main Content -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="sidebar-sticky pt-3">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Hauptmenü</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">
+                                <i class="bi bi-house-door"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/search">
+                                <i class="bi bi-search"></i> Suche
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profiles">
+                                <i class="bi bi-person"></i> Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/screenshots">
+                                <i class="bi bi-camera"></i> Screenshots
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Verwaltung</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/jobs">
+                                <i class="bi bi-list-task"></i> Jobs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/upload">
+                                <i class="bi bi-upload"></i> Upload
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='/search'">Neue Suche</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.location.href='/upload'">URL hochladen</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="startFullScraping()">
+                            <i class="bi bi-search"></i> Vollständiges Scraping starten
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-0 shadow h-100 py-2 stats-card">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Gesamt-Profile</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_profiles }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="bi bi-person-circle fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-0 shadow h-100 py-2 stats-card warning">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Verdächtige Profile</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_profiles - stats.reported_profiles }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-0 shadow h-100 py-2 stats-card danger">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Gemeldete Profile</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.reported_profiles }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="bi bi-flag fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-0 shadow h-100 py-2 stats-card success">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Screenshots</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_screenshots }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="bi bi-camera fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Running Jobs -->
+                {% if running_jobs %}
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-list-task"></i> Laufende Jobs
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Job ID</th>
+                                        <th>Modus</th>
+                                        <th>Status</th>
+                                        <th>Startzeit</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for job_id, job in running_jobs.items() %}
+                                    <tr>
+                                        <td>{{ job_id }}</td>
+                                        <td>{{ job.mode }}</td>
+                                        <td>
+                                            {% if job.status == 'running' %}
+                                            <span class="badge bg-warning">Läuft</span>
+                                            {% elif job.status == 'completed' %}
+                                            <span class="badge bg-success">Abgeschlossen</span>
+                                            {% elif job.status == 'error' %}
+                                            <span class="badge bg-danger">Fehler</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ job.start_time }}</td>
+                                        <td>
+                                            <a href="/job/{{ job_id }}" class="btn btn-sm btn-info">Details</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Latest Suspicious Profiles -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="bi bi-exclamation-triangle"></i> Neueste verdächtige Profile
+                    </div>
+                    <div class="card-body">
+                        {% if suspicious_profiles %}
+                        <div class="row">
+                            {% for profile in suspicious_profiles %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card profile-card">
+                                    <div class="risk-badge">
+                                        <span class="badge {% if profile.risk_score > 75 %}bg-danger{% elif profile.risk_score > 50 %}bg-warning{% else %}bg-info{% endif %}">
+                                            Risiko: {{ profile.risk_score|round|int }}%
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ profile.profile_name }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ profile.platform.name }}</h6>
+                                        <p class="card-text">{{ profile.description[:100] + '...' if profile.description and profile.description|length > 100 else profile.description }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="{{ profile.profile_link }}" target="_blank" class="btn btn-sm btn-outline-primary">Profil öffnen</a>
+                                            <button class="btn btn-sm btn-danger" onclick="reportProfile({{ profile.id }})">Melden</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-muted">
+                                        Entdeckt: {{ profile.first_seen.strftime('%d.%m.%Y') }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">
+                            Keine verdächtigen Profile gefunden.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Platform Statistics -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-bar-chart"></i> Plattform-Statistiken
+                    </div>
+                    <div class="card-body">
+                        <canvas id="platformChart"></canvas>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">IRI® Legal Agent</h5>
+                    <p>
+                        Ein Tool zur Erkennung und Dokumentation von nicht-lizenzierten kosmetischen Behandlungen in Deutschland.
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#!" class="text-dark">Dokumentation</a></li>
+                        <li><a href="#!" class="text-dark">Hilfe</a></li>
+                        <li><a href="#!" class="text-dark">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Rechtliches</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#!" class="text-dark">Datenschutz</a></li>
+                        <li><a href="#!" class="text-dark">Impressum</a></li>
+                        <li><a href="#!" class="text-dark">AGB</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2025 IRI® Legal Agent
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Platform Statistics Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const platformData = {
+                labels: [
+                    {% for platform, count in stats.platforms.items() %}
+                    '{{ platform }}',
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Anzahl Profile',
+                    data: [
+                        {% for platform, count in stats.platforms.items() %}
+                        {{ count }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 64)',
+                        'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const ctx = document.getElementById('platformChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: platformData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Profile pro Plattform'
+                        }
+                    }
+                }
+            });
+        });
+
+        // Start Full Scraping
+        function startFullScraping() {
+            if (confirm('Möchten Sie einen vollständigen Scraping-Durchlauf starten? Dies kann einige Zeit dauern.')) {
+                fetch('/api/run_scraping', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: 'full'
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Scraping-Job gestartet! Job-ID: ' + data.job_id);
+                        window.location.reload();
+                    } else {
+                        alert('Fehler beim Starten des Scraping-Jobs: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Fehler beim Starten des Scraping-Jobs');
+                });
+            }
+        }
+
+        // Report Profile
+        function reportProfile(profileId) {
+            if (confirm('Möchten Sie dieses Profil als verdächtig melden?')) {
+                fetch('/api/report_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        profile_id: profileId
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Profil erfolgreich gemeldet!');
+                        window.location.reload();
+                    } else {
+                        alert('Fehler beim Melden des Profils: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Fehler beim Melden des Profils');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
