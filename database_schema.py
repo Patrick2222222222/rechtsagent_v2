@@ -88,7 +88,7 @@ class Screenshot(Base):
     screenshot_date = Column(DateTime, default=datetime.now)
     url_captured = Column(String(512), nullable=False)
     is_evidence = Column(Boolean, default=True)
-    metadata = Column(Text)  # JSON-Metadaten
+    meta_data = Column(Text)  # JSON-Metadaten
     
     # Beziehungen
     profile = relationship("Profile", back_populates="screenshots")
